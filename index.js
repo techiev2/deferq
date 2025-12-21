@@ -13,8 +13,14 @@ window.addEventListener("online", async (e) => {
   const newQueue = JSON.stringify(queue.filter((_, idx) => !successes.has(idx)))
   localStorage.setItem('networkQueue', newQueue)
 })
-function addToQueue(key, fn, payload) {
+function addToQueue(key, payload) {
+  let caller
+  try {
+    throw new Error()
+  } catch (err) {
+    caller = err.stack.split('\n')[1].split(' at ')[1].split(' ')[0]
+  }
   const queue = JSON.parse((localStorage.getItem(key) || '[]'))
-  queue.push({ fn, payload })
+  queue.push({ fn: caller, payload })
   localStorage.setItem(key, JSON.stringify(queue))
 }

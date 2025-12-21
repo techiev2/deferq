@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/techiev2/laterjs.git"
+    "url": "git+https://github.com/techiev2/deferq.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/techiev2/laterjs/issues"
+    "url": "https://github.com/techiev2/deferq/issues"
   },
-  "homepage": "https://github.com/techiev2/laterjs#readme",
+  "homepage": "https://github.com/techiev2/deferq#readme",
   "private": false
 }

@@ -86,6 +86,7 @@ Example: addToQueue('networkQueue', 'createPost', { post: 'data' })
 - Functions must be available on window with the exact name used when queuing.
 - Payloads must be JSON-serializable.
 - Functions to queue must be pure functions and not use global state, for safety and proper application.
+- Functions must be in the window scope. Functions scoped inside closures are not visible to the library.
 - No built-in queue size limit (add your own in production if needed).
 - Works in all modern browsers.
 

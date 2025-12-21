@@ -7,6 +7,10 @@ window.addEventListener("online", async (e) => {
   showToast(message, 2);
   const successes = new Set((await Promise.allSettled(queue.map(async ({fn, payload}, idx) => {
     const func = window[fn]
+    if (!func || typeof func !== 'function') {
+      console.error(`${fn} is not available as a function at the window level.`)
+      return idx
+    }
     await func(payload)
     return idx
   }))).filter((prom) => prom.status === 'fulfilled').map(({ value }) => value))

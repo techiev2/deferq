@@ -1,4 +1,4 @@
-# LaterJS
+# deferq
 
 A tiny, zero-dependency JavaScript library for queuing async actions when offline and automatically retrying them when connectivity returns.
 
@@ -14,19 +14,19 @@ Ideal for simple offline support without the complexity of service workers.
 
 ### Via npm
 
-Install with: `npm install laterjs`
+Install with: `npm install deferq`
 
 ### Via CDN
 
 ```html
-<script src="https://unpkg.com/laterjs@1.0.0/dist/laterjs.min.js"></script>
+<script src="https://unpkg.com/deferq@1.0.0/dist/deferq.min.js"></script>
 ```
 
 
 ## Usage
 ### 1. Initialize the library (once)
 ```JavaScript
-import 'laterjs';  // Automatically registers the "online" listener
+import 'deferq';  // Automatically registers the "online" listener
 ```
 
 ### 2. Queue actions when offline
@@ -51,7 +51,7 @@ createPost({ post: "Hello world!" });
 ```
 
 ### 3. Automatic retry
-When the browser fires the "online" event, LaterJS:
+When the browser fires the "online" event, deferq:
 
 - Loads the queue from localStorage
 - Executes all queued functions concurrently
@@ -77,7 +77,7 @@ Example: addToQueue('networkQueue', 'createPost', { post: 'data' })
 
 - When offline, use addToQueue instead of calling the function directly.
 - Actions are serialized and stored in localStorage under the given key.
-- On "online", LaterJS replays all actions concurrently using Promise.allSettled.
+- On "online", deferq replays all actions concurrently using Promise.allSettled.
 - Successful actions are removed; failed ones remain for future retries.
 
 ## Notes

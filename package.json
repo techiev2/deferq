@@ -17,5 +17,6 @@
   "bugs": {
     "url": "https://github.com/techiev2/laterjs/issues"
   },
-  "homepage": "https://github.com/techiev2/laterjs#readme"
+  "homepage": "https://github.com/techiev2/laterjs#readme",
+  "private": false
 }

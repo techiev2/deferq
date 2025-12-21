@@ -1,5 +1,5 @@
 {
-  "name": "laterjs",
+  "name": "@techiev2/laterjs",
   "version": "1.0.0",
   "description": "A tiny, zero-dependency JavaScript library for queuing async actions when offline and automatically retrying them when connectivity returns.",
   "main": "index.js",

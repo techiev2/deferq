@@ -89,5 +89,19 @@ Example: addToQueue('networkQueue', 'createPost', { post: 'data' })
 - No built-in queue size limit (add your own in production if needed).
 - Works in all modern browsers.
 
+### Function Naming Requirement
+
+For automatic retry to work, the calling function must have a name that appears in the stack trace.
+
+Works:
+- Named function declarations: `function createPost() {}`
+- Named function expressions: `const post = function createPost() {}`
+
+Does not work:
+- Arrow functions: `const createPost = async () => {}`
+- Anonymous functions
+
+*Recommendation*: Use named functions for actions that may be queued offline.
+
 ## License
 MIT

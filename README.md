@@ -5,7 +5,6 @@ A tiny, zero-dependency JavaScript library for queuing async actions when offlin
 - **Lightweight**: ~30 lines of code
 - **Zero dependencies**
 - **Concurrent retries**: All queued actions run in parallel when back online
-- **Persistent**: Uses `localStorage` to survive page reloads
 - **Flexible**: Queue any async function by name
 
 Ideal for simple offline support without the complexity of service workers.
@@ -53,10 +52,10 @@ createPost({ post: "Hello world!" });
 ### 3. Automatic retry
 When the browser fires the "online" event, deferq:
 
-- Loads the queue from localStorage
-- Executes all queued functions concurrently
-- Removes successful actions
-- Keeps persistent failures for the next online event
+- Loads the queue from internal storage.
+- Executes all queued functions serially to avoid a thundering herd.
+- Removes successful actions.
+- Keeps persistent failures for the next online event.
 
 No additional setup required.
 
@@ -66,8 +65,8 @@ addToQueue(key: string, fnName: string, payload: any)
 ````
 Queues an action.
 
-- key: localStorage key for the queue (e.g., 'networkQueue')
-- fnName: Name of the function as it exists on window (string)
+- key: key for the queue (e.g., 'networkQueue', 'fetchQueue', 'transferQueue')
+- fnName: Name of the function as it was registered to deferq.
 - payload: Data to pass to the function when replayed
 
 Example: addToQueue('networkQueue', 'createPost', { post: 'data' })
@@ -76,17 +75,14 @@ Example: addToQueue('networkQueue', 'createPost', { post: 'data' })
 ## How It Works
 
 - When offline, use addToQueue instead of calling the function directly.
-- Actions are serialized and stored in localStorage under the given key.
-- On "online", deferq replays all actions concurrently using Promise.allSettled.
+- Actions are cached in internal storage under the given key.
+- On "online", deferq replays all actions serially.
 - Successful actions are removed; failed ones remain for future retries.
 
 ## Notes
 
-- Actions are tab-specific (localStorage is not shared across tabs).
-- Functions must be available on window with the exact name used when queuing.
-- Payloads must be JSON-serializable.
+- In v1.1.3, actions are no longer stored in localStorage to avoid pollution and XSS attacks.
 - Functions to queue must be pure functions and not use global state, for safety and proper application.
-- Functions must be in the window scope. Functions scoped inside closures are not visible to the library.
 - No built-in queue size limit (add your own in production if needed).
 - Works in all modern browsers.
 

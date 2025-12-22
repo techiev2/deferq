@@ -1,10 +1,9 @@
-window.addEventListener("online", async (e) => {
+window && window.addEventListener("online", async (e) => {
   let queue = JSON.parse(localStorage.getItem('networkQueue') || '[]')
   let message = "We are back!"
   if (queue.length) {
     message = `${message}. Attempting your previous requests.`
   }
-  showToast(message, 2);
   const successes = new Set((await Promise.allSettled(queue.map(async ({fn, payload}, idx) => {
     const func = window[fn]
     if (!func || typeof func !== 'function') {
@@ -22,9 +21,30 @@ function addToQueue(key, payload) {
   try {
     throw new Error()
   } catch (err) {
-    caller = err.stack.split('\n')[1].split(' at ')[1].split(' ')[0]
+    const errLines = err.stack.split('\n')
+    let thisReached = false
+    errLines.map((line) => {
+      if (line.indexOf('at addToQueue') !== -1) {
+        thisReached = true
+        return
+      }
+      if (thisReached) {
+        if (!caller) {
+          caller = line.split(' at ')[1].split(' ')[0]
+        } else {
+          return
+        }
+      }
+    })
   }
-  const queue = JSON.parse((localStorage.getItem(key) || '[]'))
-  queue.push({ fn: caller, payload })
-  localStorage.setItem(key, JSON.stringify(queue))
+  if (caller !== 'addToQueue') {
+    const queue = JSON.parse((localStorage.getItem(key) || '[]'))
+    queue.push({ fn: caller, payload })
+    localStorage.setItem(key, JSON.stringify(queue))
+  }
+}
+
+export default addToQueue
+if (window) {
+	window.addToQueue = addToQueue
 }

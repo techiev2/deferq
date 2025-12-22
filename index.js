@@ -1,20 +1,24 @@
 window && window.addEventListener("online", async (e) => {
-  let queue = JSON.parse(localStorage.getItem('networkQueue') || '[]')
-  let message = "We are back!"
-  if (queue.length) {
-    message = `${message}. Attempting your previous requests.`
-  }
-  const successes = new Set((await Promise.allSettled(queue.map(async ({fn, payload}, idx) => {
-    const func = window[fn]
-    if (!func || typeof func !== 'function') {
-      console.error(`${fn} is not available as a function at the window level.`)
-      return idx
+  Object.entries(localStorage).filter(([k]) => {
+    return k.endsWith('Queue')
+  }).map(async ([k, v]) => {
+    let queue = JSON.parse(v)
+    let message = "We are back!"
+    if (queue.length) {
+      message = `${message}. Attempting your previous requests.`
     }
-    await func(payload)
-    return idx
-  }))).filter((prom) => prom.status === 'fulfilled').map(({ value }) => value))
-  const newQueue = JSON.stringify(queue.filter((_, idx) => !successes.has(idx)))
-  localStorage.setItem('networkQueue', newQueue)
+    const successes = new Set((await Promise.allSettled(queue.map(async ({ fn, payload }, idx) => {
+      const func = window[fn]
+      if (!func || typeof func !== 'function') {
+        console.error(`${fn} is not available as a function at the window level.`)
+        return idx
+      }
+      await func(payload)
+      return idx
+    }))).filter((prom) => prom.status === 'fulfilled').map(({ value }) => value))
+    const newQueue = JSON.stringify(queue.filter((_, idx) => !successes.has(idx)))
+    localStorage.setItem(k, newQueue)
+  })
 })
 function addToQueue(key, payload) {
   let caller

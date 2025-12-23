@@ -6,25 +6,26 @@ function register(fn) {
     registers[name] = fn
   }
 }
-async function addToQueue(queueName, fnName, payload = {}) {
+function addToQueue(queueName, fnName, payload = {}) {
   const fn = registers[fnName]
   if (!fn) {
-    return console.error(`Function ${fnName} is not registered. Not allowing unsafe usage.`)
+    return !!console.error(`Function ${fnName} is not registered. Not allowing unsafe usage.`)
   }
   if (typeof fn !== 'function') {
-    return console.error(`${fnName} is not a function. Not allowing unsafe usage.`)
+    return !!console.error(`${fnName} is not a function. Not allowing unsafe usage.`)
   }
   const _registeredQueueCalls = queueData[queueName] || []
   const duplicates = _registeredQueueCalls.filter((item) => {
     return item.fn === fn && JSON.stringify(payload) === JSON.stringify(item.payload)
   })
   if (duplicates.length) {
-    return console.warn(`Found duplicated requests in the queue. Not adding again.`)
+    return !!console.warn(`Found duplicated requests in the queue. Not adding again.`)
   }
   _registeredQueueCalls.push({
     fn, payload
   })
   queueData[queueName] = _registeredQueueCalls
+  return true
 }
 
 function setupEvents() {

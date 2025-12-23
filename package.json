@@ -1,6 +1,6 @@
 {
   "name": "deferq",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "A tiny, zero-dependency JavaScript library for queuing async actions when offline and automatically retrying them when connectivity returns.",
   "main": "index.js",
   "scripts": {

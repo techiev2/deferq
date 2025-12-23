@@ -15,6 +15,12 @@ async function addToQueue(queueName, fnName, payload = {}) {
     return console.error(`${fnName} is not a function. Not allowing unsafe usage.`)
   }
   const _registeredQueueCalls = queueData[queueName] || []
+  const duplicates = _registeredQueueCalls.filter((item) => {
+    return item.fn === fn && JSON.stringify(payload) === JSON.stringify(item.payload)
+  })
+  if (duplicates.length) {
+    return console.warn(`Found duplicated requests in the queue. Not adding again.`)
+  }
   _registeredQueueCalls.push({
     fn, payload
   })

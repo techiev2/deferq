@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+scriptsDir=$(dirname ${BASH_SOURCE[0]});rootDir=$(realpath $(dirname $scriptsDir))
+version=$(cat "${rootDir}/package.json" | jq '.version')
+git tag "v${version}" && git push origin master && git push origin --tags && npm login && npm publish

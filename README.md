@@ -18,14 +18,16 @@ Install with: `npm install deferq`
 ### Via CDN
 
 ```html
-<script src="https://unpkg.com/deferq@1.0.0/dist/deferq.min.js"></script>
+<script src="https://app.unpkg.com/deferq@1.1.3/files/index.js"></script>
 ```
 
 
 ## Usage
 ### 1. Initialize the library (once)
 ```JavaScript
-import 'deferq';  // Automatically registers the "online" listener
+<script type="module">
+  import { addToQueue, register } from 'https://cdn.jsdelivr.net/npm/deferq@1.1.3/index.js'; // Automatically registers the "online" listener
+</script>
 ```
 
 ### 2. Queue actions when offline

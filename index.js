@@ -37,6 +37,13 @@ function setupEvents() {
   })
 }
 
-if (window) { window.deferq = { addToQueue, register } }
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { addToQueue, register };
+} else if (typeof define === 'function' && define.amd) {
+  define([], function() {
+    return { addToQueue, register };
+  });
+} else {
+  window.deferq = { addToQueue, register };
+}
 setupEvents()
-export { addToQueue, register };
